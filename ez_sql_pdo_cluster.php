@@ -77,10 +77,12 @@ class ezSQL_pdo_cluster {
 		
 		if(stripos($query, "select") === 0) {
 		
-			return $this->db_read->query($query);
+			$r = $this->db_read->query($query);
+			return $r;
 		}
-		else {			
-			return $this->db_write->query($query);
+		else {
+			$r = $this->db_write->query($query);
+			return $r;
 		}
 	}
 	
