@@ -22,6 +22,9 @@ class ezSQL_pdo_cluster {
 	private $db_read;
 	private $db_write;
 	
+	public $rows_affected;
+	public $insert_id;
+	
 	function __construct($dsn_cfg_arr = array()) {
 		
 		$dsn_cfg_arr_count = count($dsn_cfg_arr);
@@ -31,6 +34,9 @@ class ezSQL_pdo_cluster {
 		
 		$this->db_read = NULL;
 		$this->db_write = NULL;
+		
+		$this->rows_affected = 0;
+		$this->insert_id = 0;
 		
 		if($dsn_cfg_arr_count == 1) {
 			//只有1个配置，读和写都是同1个数据库链接
@@ -78,10 +84,17 @@ class ezSQL_pdo_cluster {
 		if(stripos($query, "select") === 0) {
 		
 			$r = $this->db_read->query($query);
+			
+			$this->rows_affected = $this->db_read->rows_affected;
+			
 			return $r;
 		}
 		else {
 			$r = $this->db_write->query($query);
+			
+			$this->rows_affected = $this->db_write->rows_affected;
+			$this->insert_id = $this->db_write->insert_id;
+			
 			return $r;
 		}
 	}
